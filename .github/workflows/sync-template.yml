@@ -1,0 +1,37 @@
+name: Sync from Template
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Weekly on Sundays at midnight UTC
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  sync:
+    name: Sync with Template Repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Generate a short-lived token using GitHub App credentials
+      # See .template-docs/Help/Template-Sync.md for setup instructions
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.TEMPLATE_SYNC_APP_ID }}
+          private-key: ${{ secrets.TEMPLATE_SYNC_PRIVATE_KEY }}
+          owner: stadium-software
+          repositories: stadium-8
+
+      - name: Sync from template
+        uses: AndreasAugustin/actions-template-sync@v2
+        with:
+          source_repo_path: stadium-software/stadium-8
+          upstream_branch: main
+          pr_title: 'chore: sync with template repository'
+          pr_labels: template-sync
+          source_repo_token: ${{ steps.app-token.outputs.token }}

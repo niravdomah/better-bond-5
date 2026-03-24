@@ -1,0 +1,35 @@
+# ===========================================
+# TEMPLATE SYNC IGNORE FILE
+# ===========================================
+# Strategy: Manual sync for /web
+# Auto-sync: .github/, .claude/, root configs
+# Manual sync: /web (review release notes)
+# ===========================================
+
+# The entire web application folder (user territory)
+# Users should manually apply /web updates by reviewing CHANGELOG.md
+web/
+
+# User-specific configurations
+.env
+.env.local
+.env.*.local
+
+# Project-specific documentation
+documentation/
+
+# Generated files
+generated-docs/
+
+# User's API definitions
+api/
+
+# Database configurations
+db/
+
+# Task tracking
+tasks/
+
+# IDE settings
+.vscode/
+.idea/
