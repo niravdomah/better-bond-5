@@ -1,0 +1,419 @@
+openapi: 3.0.3
+info:
+  title: BetterBond Commission Payments
+  version: 1.0.0
+paths:
+  /v1/payment-batches/{Id}:
+    parameters:
+      - in: path
+        name: Id
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - Payment Batch
+      summary: Get payment batch by key
+      operationId: PaymentBatchGetById
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentBatchRead'
+        '404':
+          description: Not Found
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+  /v1/payments:
+    get:
+      tags:
+        - Payment
+      summary: Get a list of all payments
+      description: Get a list of all payments
+      operationId: PaymentGetList
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentReadList'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+      parameters:
+        - name: ClaimDate
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: AgencyName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: Status
+          in: query
+          required: false
+          schema:
+            type: string
+  /v1/payments/{Id}:
+    parameters:
+      - in: path
+        name: Id
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - Payment
+      summary: Get payment by key
+      operationId: PaymentGetById
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRead'
+        '404':
+          description: Not Found
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+  /v1/payment-batches:
+    get:
+      tags:
+        - Payment Batch
+      summary: Get a list of all payment batches
+      description: Get a list of all payment batches
+      operationId: PaymentBatchGetList
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentBatchReadList'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+      parameters:
+        - name: Reference
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: AgencyName
+          in: query
+          required: false
+          schema:
+            type: string
+    post:
+      tags:
+        - Payment Batch
+      summary: Create payment batch
+      operationId: PaymentBatchCreate
+      parameters:
+        - name: LastChangedUser
+          in: header
+          description: Name of user performing the action
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                PaymentIds:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+  /v1/payments/park:
+    put:
+      operationId: PaymentPark
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                PaymentIds:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+      tags:
+        - Payment
+  /v1/payments/dashboard:
+    get:
+      operationId: PaymentsDashboardGet
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentsDashboardRead'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+      tags:
+        - Payment
+  /v1/payment-batches/{Id}/download-invoice-pdf:
+    parameters:
+      - in: path
+        name: Id
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: PaymentBatchDownloadInvoicePdf
+      responses:
+        '200':
+          description: Success
+          content:
+            application/octet-stream:
+              schema:
+                type: array
+                items:
+                  type: integer
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+      tags:
+        - Payment Batch
+  /v1/payments/unpark:
+    put:
+      operationId: PaymentUnpark
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                PaymentIds:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+      tags:
+        - Payment
+  /demo/reset-demo:
+    post:
+      tags: [Demo Administration]
+      operationId: DemoAdministrationResetDemo
+      summary: Reset demo data
+      responses:
+        '200':
+          description: Reset started. No response body.
+components:
+  schemas:
+    DefaultResponse:
+      type: object
+      properties:
+        Id:
+          type: integer
+        MessageType:
+          type: string
+        Messages:
+          type: array
+          items:
+            type: string
+    PaymentBatchRead:
+      type: object
+      properties:
+        Id:
+          type: integer
+        CreatedDate:
+          type: string
+        Status:
+          type: string
+        Reference:
+          type: string
+        LastChangedUser:
+          type: string
+        AgencyName:
+          type: string
+        PaymentCount:
+          type: integer
+        TotalCommissionAmount:
+          type: number
+        TotalVat:
+          type: number
+    PaymentBatchReadList:
+      type: object
+      properties:
+        PaymentBatchList:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentBatchRead'
+    PaymentRead:
+      type: object
+      properties:
+        Id:
+          type: integer
+        Reference:
+          type: string
+        AgencyName:
+          type: string
+        ClaimDate:
+          type: string
+        AgentName:
+          type: string
+        LastChangedUser:
+          type: string
+        LastChangedDate:
+          type: string
+        AgentSurname:
+          type: string
+        BondAmount:
+          type: number
+        CommissionType:
+          type: string
+        GrantDate:
+          type: string
+        RegistrationDate:
+          type: string
+        Bank:
+          type: string
+        CommissionAmount:
+          type: number
+        VAT:
+          type: number
+        Status:
+          type: string
+        BatchId:
+          type: integer
+    PaymentReadList:
+      type: object
+      properties:
+        PaymentList:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentRead'
+    PaymentStatusReportItem:
+      type: object
+      properties:
+        Status:
+          type: string
+        PaymentCount:
+          type: integer
+        TotalPaymentAmount:
+          type: number
+        CommissionType:
+          type: string
+        AgencyName:
+          type: string
+    ParkedPaymentsAgingReportItem:
+      type: object
+      properties:
+        Range:
+          type: string
+        AgencyName:
+          type: string
+        PaymentCount:
+          type: integer
+    PaymentsDashboardRead:
+      type: object
+      properties:
+        PaymentStatusReport:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentStatusReportItem'
+        ParkedPaymentsAgingReport:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParkedPaymentsAgingReportItem'
+        TotalPaymentCountInLast14Days:
+          type: integer
+        PaymentsByAgency:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentsByAgencyReportItem'
+    PaymentsByAgencyReportItem:
+      type: object
+      properties:
+        AgencyName:
+          type: string
+        PaymentCount:
+          type: integer
+        TotalCommissionCount:
+          type: number
+        Vat:
+          type: number
+servers:
+  - url: http://localhost:8042

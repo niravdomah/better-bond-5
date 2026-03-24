@@ -222,3 +222,7 @@ expect(screen.getByText('Sales: $1,234')).toBeInTheDocument();
 - [Testing Guide](.template-docs/guides/TESTING.md) - Detailed testing patterns and examples
 - [Auth & RBAC](.template-docs/Help/RBAC.md) - Role-based access control and input validation
 - [Contributing](.template-docs/CONTRIBUTING.md) - For template maintainers
+
+## Policies
+
+- [Authentication Intake](.claude/policies/authentication-intake.md) - **Never simplify or skip auth questions during INTAKE.** Always present the full BFF / frontend-only / custom options explicitly, even when the answer seems obvious from docs.
